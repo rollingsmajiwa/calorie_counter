@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie-Counter</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-200 p-6 flex justify-center align-center w-full">
+    <div class="w-full max-w-md bg-white m-4 rounded-lg p-6">
+        <h1 class="font-bold text-2xl text-center text-gray-800">Calorie Counter</h1>
+        <form action="#" id="userForm">
+            <div class="block text-gray-700">
+                <label for="food-name">Food Name</label>
+                <input type="text" id="food-name" class="border border-gray-400 mb-3 rounded-md w-full">
+            </div>
+            <div class="block text-gray-700">
+                <label for="calorie-input">Calories</label>
+                <input type="number" id="calorie-input" class="border border-gray-400 mb-3 rounded-md w-full">
+            </div>
+            <button id="add-btn" type="submit" class="w-full bg-blue-800 text-white p-1 rounded-sm">Add Item</button>
+            <button id="reset-btn" type="submit" class="w-full bg-blue-800 text-white p-1 rounded-sm mt-4">reset all</button>
+        </form>
+        <div>
+            <h2 class="text-lg font-black text-center">List of Items</h2>
+            <ul class="border border-gray-400 bg-slate-100 mt-2 p-2" id="listItem"></ul>
+        </div>
+        <div id="totalCalories" class="bg-gray-300 text-sm font-bold w-40 mt-5"></div>
+    </div>
+    <script src="script.js"></script>
+    
+</body>
+</html>

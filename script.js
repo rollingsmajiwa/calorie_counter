@@ -9,6 +9,10 @@ const resetBtn = document.getElementById("reset-btn");
 const totalCalories = document.getElementById("totalCalories");
 
 
+const APP_ID = "85e0f743";
+const APP_KEY = "e4cec4f49de9a6e67ab385041a2383e6";
+
+
 
 function updateCalorie() {
     const total = foodItem.reduce((sum, item) => sum + item.calories, 0)
@@ -43,16 +47,42 @@ function renderList() {
     
    
 }
-userForm.addEventListener("submit", (event)=> {
+//Fetch API and Form Handler
+userForm.addEventListener("submit", async(event)=> {
     event.preventDefault()
+
     let name = foodName.value
-    let calories = parseInt(calorie.value, 10)
+    if (!name) return;
+    
+    const url = `https://api.edamam.com/api/food-database/v2/parser?app_id=${APP_ID}&app_key=${APP_KEY}$ingr=${encodeURIComponent(name)}`; 
+
+    try{
+         
+        const response = await fetch(url);
+        const data = await response.json();
+        if(data.parsed && data.parsed.length > 0) {
+        const officialName = data.parsed.food.label;
+        const energyValue = Math.round(data.parsed.food.nutrients.ENERC_KCAL);
+
+        foodItem.push({name: officialName, calorie: energyValue });
+        localStorage.setItem("foodItem", JSON.stringify(foodItem));
+         renderList();
+        userForm.reset();
+        updateCalorie();
+        }
+      else {alert("Food profile not found")}  
+    }
+    catch (error) {
+        alert("Oops! Could not find that food or internet is down")
+        console.log(error);
+    }
 
     if(name && !isNaN(calories)) {
         foodItem.push({name, calories});
         localStorage.setItem("foodItem", JSON.stringify(foodItem));
         renderList()
         userForm.reset();
+        updateCalorie();
     }
 });
 resetBtn.addEventListener("click", ()=> {

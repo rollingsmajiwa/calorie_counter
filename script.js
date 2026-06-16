@@ -5,12 +5,9 @@ const userForm = document.getElementById("userForm");
 const foodName = document.getElementById("food-name");
 const calorie = document.getElementById("calorie-input");
 const listItem = document.getElementById("listItem");
-const resetBtn = document.getElementById("reset-btn");
 const totalCalories = document.getElementById("totalCalories");
+const resetBtn = document.getElementById("reset-btn");
 
-
-const APP_ID = "85e0f743";
-const APP_KEY = "e4cec4f49de9a6e67ab385041a2383e6";
 
 
 
@@ -34,7 +31,9 @@ function renderList() {
        
        removeBtn.addEventListener("click", ()=> {
         foodItem.splice(index, 1);
+        localStorage.setItem("foodItem", JSON.stringify(foodItem));
         renderList();
+        updateCalorie();
        });
        li.appendChild(textSpan);
        li.appendChild(removeBtn);
@@ -47,38 +46,16 @@ function renderList() {
     
    
 }
-//Fetch API and Form Handler
+//Form Handler
 userForm.addEventListener("submit", async(event)=> {
     event.preventDefault()
 
     let name = foodName.value
-    if (!name) return;
     
-    const url = `https://api.edamam.com/api/food-database/v2/parser?app_id=${APP_ID}&app_key=${APP_KEY}$ingr=${encodeURIComponent(name)}`; 
+    const calorieValue = parseInt(calorie.value);
 
-    try{
-         
-        const response = await fetch(url);
-        const data = await response.json();
-        if(data.parsed && data.parsed.length > 0) {
-        const officialName = data.parsed.food.label;
-        const energyValue = Math.round(data.parsed.food.nutrients.ENERC_KCAL);
-
-        foodItem.push({name: officialName, calorie: energyValue });
-        localStorage.setItem("foodItem", JSON.stringify(foodItem));
-         renderList();
-        userForm.reset();
-        updateCalorie();
-        }
-      else {alert("Food profile not found")}  
-    }
-    catch (error) {
-        alert("Oops! Could not find that food or internet is down")
-        console.log(error);
-    }
-
-    if(name && !isNaN(calories)) {
-        foodItem.push({name, calories});
+    if(name && calorieValue) {
+        foodItem.push({name: name, calories: calorieValue});
         localStorage.setItem("foodItem", JSON.stringify(foodItem));
         renderList()
         userForm.reset();
@@ -88,6 +65,8 @@ userForm.addEventListener("submit", async(event)=> {
 resetBtn.addEventListener("click", ()=> {
     if(confirm("Are you sure you want to reset all?")) {
         foodItem = [];
+        localStorage.removeItem("foodItem");
         renderList();
+        updateCalorie();
     }
 })
